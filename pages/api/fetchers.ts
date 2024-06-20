@@ -1,7 +1,7 @@
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
 export const fetchCatList = async (): Promise<any> => {
-    const response = await fetch("https://api.thecatapi.com/v1/breeds?limit=5&page=0", {
+    const response = await fetch("https://api.thecatapi.com/v1/breeds?limit=4&page=0", {
         headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey ?? '',
