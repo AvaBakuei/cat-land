@@ -1,0 +1,27 @@
+.grid {
+  margin: 5rem 0;
+}
+.cardGrid {
+  display: flex;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.image {
+  height: 300px;
+  object-fit: cover;
+}
+.description {
+  margin-bottom: 3rem;
+}
+
+.button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 1rem auto;
+  width: 90%;
+}
