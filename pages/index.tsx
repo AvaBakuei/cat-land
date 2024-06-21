@@ -22,7 +22,7 @@ export default function Home() {
           return { ...cat, imageUrl: image.url };
         })
       )
-      return catsWithImages;
+      return catsWithImages; // map
     },
   });
 

@@ -1,17 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchCatList } from "./fetchers";
-
-type Cat = {
-  id: string;
-  name: string;
-  origin: string;
-  image_id: string;
-  discription: string;
-};
+import { CatResponse } from "./catResponse.types";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Cat[] | { error: string }>
+  res: NextApiResponse<CatResponse | { error: string }>
 ) {
   try {
     const catList = await fetchCatList();

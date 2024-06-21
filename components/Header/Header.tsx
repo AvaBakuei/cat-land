@@ -1,4 +1,6 @@
-import { Button, NavLink } from '@mantine/core';
+import { Button } from '@mantine/core';
+import Link from 'next/link'
+
 
 import { IconPawFilled } from '@tabler/icons-react';
 import classes from './Header.module.css';
@@ -37,12 +39,9 @@ export function Header() {
       <IconPawFilled style={{ width: 50, height: 50, }} color="#FFC078" />
       <nav className={classes.nav}>
         {navItems.map((item) => (
-          <NavLink
-            href={item.url}
-            label={item.label}
-            key={item.label}
-            className={classes.link}
-          />
+          <Link href={item.url} key={item.label} className={classes.link}>
+            {item.label}
+          </Link>
         ))}
       </nav>
       <Button variant="filled" color="orange.3">Sign Up</Button>

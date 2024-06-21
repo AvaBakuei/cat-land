@@ -26,6 +26,7 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
             src={cardData.imageUrl}
             alt={cardData.name}
             className={styles.image}
+            loading="lazy"
           />
           <Paper shadow="xs" className={styles.name}>
             <Text size="sm" ta="center" fw={500} c="black">
