@@ -3,33 +3,42 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { Header } from "@/components/Header/Header";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCatList, fetchCatImage } from "./api/fetchers";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
+import { useFetcher } from "./hooks/useFetcher";
+import React, { useEffect } from "react";
+import { CatResponse } from "./api/catResponse.types";
+import { CatImageResponse } from "./api/catImageResponse.types";
 
+const Home = () => {
+  const inter = Inter({ subsets: ["latin"] });
+  const { data: catListData, loading: catListLoading, error: catListError, fetchData: fetchCatList } = useFetcher();
+  const { fetchData: fetchCatImage } = useFetcher();
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
-
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery<CatResponse[], CatImageResponse, Error>({
     queryKey: ["catList"],
     queryFn: async () => {
-      const catList = await fetchCatList();
+      const catList = await fetchCatList("breeds?limit=4&page=0");
+      if (!Array.isArray(catList)) {
+        throw new Error("Expected an array from fetchCatList");
+      }
       const catsWithImages = await Promise.all(
-        catList.map(async (cat: any) => {
-            const image = await fetchCatImage(cat.reference_image_id);
+        catList.map(async (cat) => {
+          const image = await fetchCatImage("images", cat.reference_image_id);
           return { ...cat, imageUrl: image.url };
         })
-      )
-      return catsWithImages; // map
-    },
+      );
+      return catsWithImages;
+    }
   });
 
-  if (isLoading) return <Loading />
-  if (error) return 'An error has occurred: ' + error.message;
+  useEffect(() => {
+    refetch();
+  }, [catListData, refetch]);
 
-  console.log("data", data);
+  if (isLoading || catListLoading) return <Loading />;
+  if (error || catListError) return <div>An error has occurred: {error?.message || catListError?.message}</div>;
+
   return (
     <>
       <Head>
@@ -40,8 +49,10 @@ export default function Home() {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <Header />
-        <CardList cardData={data as any} />
+        {data && <CardList cardData={data} />}
       </main>
     </>
   );
-}
+};
+
+export default Home;
