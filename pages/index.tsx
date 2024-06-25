@@ -6,38 +6,28 @@ import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
 import { useFetcher } from "./hooks/useFetcher";
-import React, { useEffect } from "react";
-import { CatResponse } from "./api/catResponse.types";
-import { CatImageResponse } from "./api/catImageResponse.types";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const Home = () => {
-  const inter = Inter({ subsets: ["latin"] });
-  const { data: catListData, loading: catListLoading, error: catListError, fetchData: fetchCatList } = useFetcher();
+  const { fetchData: fetchCatList } = useFetcher();
   const { fetchData: fetchCatImage } = useFetcher();
-
-  const { isLoading, error, data, refetch } = useQuery<CatResponse[], CatImageResponse, Error>({
+  const { isLoading, error, data } = useQuery({
     queryKey: ["catList"],
     queryFn: async () => {
       const catList = await fetchCatList("breeds?limit=4&page=0");
-      if (!Array.isArray(catList)) {
-        throw new Error("Expected an array from fetchCatList");
-      }
       const catsWithImages = await Promise.all(
-        catList.map(async (cat) => {
+        catList.map(async (cat: any) => {
           const image = await fetchCatImage("images", cat.reference_image_id);
           return { ...cat, imageUrl: image.url };
         })
       );
       return catsWithImages;
-    }
+    },
   });
 
-  useEffect(() => {
-    refetch();
-  }, [catListData, refetch]);
-
-  if (isLoading || catListLoading) return <Loading />;
-  if (error || catListError) return <div>An error has occurred: {error?.message || catListError?.message}</div>;
+  if (isLoading) return <Loading />;
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <>
