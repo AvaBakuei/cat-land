@@ -19,7 +19,7 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
       >
         <Card.Section
           component="a"
-          href="#"
+          href={`/catProfile/${cardData.id}`}
           className={`${styles.imageCard} ${hover ? styles.hovered : ""}`}
         >
           <Image
