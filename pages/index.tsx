@@ -6,18 +6,22 @@ import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
 import { useFetcher } from "./hooks/useFetcher";
+import { withDataCheck } from "@/components/hocs/withDataCheck";
+import { CardInterface } from "@/components/Card/card.types";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
   const { fetchData: fetchCatList } = useFetcher();
   const { fetchData: fetchCatImage } = useFetcher();
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data } = useQuery<CardInterface[]>({
     queryKey: ["catList"],
     queryFn: async () => {
       const catList = await fetchCatList("breeds?limit=4&page=0");
       const catsWithImages = await Promise.all(
-        catList.map(async (cat: any) => {
+        catList.map(async (cat: any): Promise<CardInterface> => {
           const image = await fetchCatImage("images", cat.reference_image_id);
           return { ...cat, imageUrl: image.url };
         })
@@ -39,7 +43,7 @@ const Home = () => {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <Header />
-        {data && <CardList cardData={data} />}
+        <EnhancedCardList cardData={data ?? []} />
       </main>
     </>
   );
