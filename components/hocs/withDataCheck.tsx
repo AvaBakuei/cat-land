@@ -1,0 +1,3 @@
+const withDataCheck = () => {
+    // Not implemented
+}
