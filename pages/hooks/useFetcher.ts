@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const baseUrl = "https://api.thecatapi.com/v1";
