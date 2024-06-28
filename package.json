@@ -11,6 +11,7 @@
   "dependencies": {
     "@mantine/core": "^7.10.2",
     "@mantine/hooks": "^7.10.2",
+    "@plaiceholder/next": "^3.0.0",
     "@tabler/icons-react": "^3.6.0",
     "@tanstack/query-async-storage-persister": "^5.45.0",
     "@tanstack/query-persist-client-core": "^5.45.0",
@@ -20,6 +21,7 @@
     "localforage": "^1.10.0",
     "lottie-react": "^2.4.0",
     "next": "14.2.4",
+    "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18"
   },
