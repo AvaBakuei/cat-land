@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { CardInterface } from "./card.types";
 import { Card, Image, Text, Paper, Anchor, Grid } from "@mantine/core";
 import styles from "./Card.module.css";
+import Link from "next/link";
 
 export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
   const [hover, setHover] = useState(false);
@@ -17,8 +18,7 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Card.Section
-          component="a"
+        <Link
           href={`/catProfile/${cardData.id}`}
           className={`${styles.imageCard} ${hover ? styles.hovered : ""}`}
         >
@@ -33,7 +33,7 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
               {cardData.name}
             </Text>
           </Paper>
-        </Card.Section>
+        </Link>
       </Card>
     </Grid.Col>
   );
