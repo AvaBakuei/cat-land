@@ -1,22 +1,7 @@
-import { useCallback } from "react";
-
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const baseUrl = "https://api.thecatapi.com/v1";
+import {  useCallback } from "react";
+import { fetchData } from "../api/fetchData";
 
 export const useFetcher = () => {
-  const fetchData = useCallback(async (endpoint: string, id?: string) => {
-    const fullUrl = id ? `${endpoint}/${id}` : endpoint;
-    const response = await fetch(`${baseUrl}/${fullUrl}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey ?? "",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  }, []);
-
-  return { fetchData };
-};
+    const data = useCallback(fetchData, [])
+    return {data}
+}
