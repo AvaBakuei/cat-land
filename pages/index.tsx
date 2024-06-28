@@ -14,8 +14,8 @@ const inter = Inter({ subsets: ["latin"] });
 const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
-  const { fetchData: fetchCatList } = useFetcher();
-  const { fetchData: fetchCatImage } = useFetcher();
+  const { data: fetchCatList } = useFetcher();
+  const { data: fetchCatImage } = useFetcher();
   const { isLoading, error, data } = useQuery<CardInterface[]>({
     queryKey: ["catList"],
     queryFn: async () => {
