@@ -1,14 +1,18 @@
 import { useState } from "react";
 import type { CardInterface } from "./card.types";
-import { Card, Image, Text, Paper, Anchor, Grid } from "@mantine/core";
+import { Card, Text, Paper, Grid } from "@mantine/core";
+import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
+import { useImagePlaceholder } from "@/pages/hooks/useImagePlaceholder";
 
 export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
   const [hover, setHover] = useState(false);
+  const { base64 } = useImagePlaceholder(cardData);
 
   const handleMouseEnter = () => setHover(true);
   const handleMouseLeave = () => setHover(false);
+
   return (
     <Grid.Col span={3} className={styles.cardGrid}>
       <Card
@@ -22,12 +26,18 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
           href={`/catProfile/${cardData.id}`}
           className={`${styles.imageCard} ${hover ? styles.hovered : ""}`}
         >
-          <Image
-            src={cardData.imageUrl}
-            alt={cardData.name}
-            className={styles.image}
-            loading="lazy"
-          />
+          {base64 && (
+            <Image
+              src={cardData.imageUrl}
+              alt={cardData.name}
+              className={styles.image}
+              fill
+              loading="lazy"
+              placeholder="blur"
+              blurDataURL={base64}
+            />
+          )}
+
           <Paper shadow="xs" className={styles.name}>
             <Text size="sm" ta="center" fw={500} c="black">
               {cardData.name}
