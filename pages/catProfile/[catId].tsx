@@ -3,14 +3,15 @@ import { GetServerSideProps } from "next";
 import { fetchData } from "../api/fetchData";
 import { Loading } from "@/components/Loading";
 import Image from "next/image";
+import { useImagePlaceholder } from "../hooks/useImagePlaceholder";
 
 interface CatProfileProps {
     catProfileData: CatProfileResponse | null;
     error?: string;
 }
 
-
 const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
+    const { base64 } = useImagePlaceholder(catProfileData);
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -18,17 +19,21 @@ const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
         return <Loading />;
     }
 
+    console.log("base64", base64);
+
     return (
         <div>
             <h1>{catProfileData.name}</h1>
             <p>{catProfileData.description}</p>
-            {catProfileData.image && (
+            {catProfileData.imageUrl && base64 && (
                 <Image
-                    src={catProfileData.image}
+                    src={catProfileData.imageUrl}
                     alt={catProfileData.name}
                     width={500}
                     height={500}
                     loading="lazy"
+                    placeholder="blur"
+                    blurDataURL={base64}
                 />
             )}
         </div>
@@ -42,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         let catProfileData = await fetchData("breeds", catId);
         const catImageId = catProfileData.reference_image_id;
         const catImage = await fetchData("images", catImageId);
-        catProfileData = { ...catProfileData, image: catImage.url };
+        catProfileData = { ...catProfileData, imageUrl: catImage.url };
         return {
             props: {
                 catProfileData,
