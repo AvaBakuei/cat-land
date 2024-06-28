@@ -36,7 +36,7 @@ export interface CatProfileResponse {
     wikipedia_url: string
     hypoallergenic: number
     reference_image_id: string
-    image: string
+    imageUrl: string
 }
 
 export interface Weight {
