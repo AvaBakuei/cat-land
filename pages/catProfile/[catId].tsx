@@ -1,4 +1,4 @@
-import { CatProfileResponse } from "../api/catProfileResponse.types";
+import { CatProfileResponse } from "../../types/catProfileResponse.types";
 import { GetServerSideProps } from "next";
 import { fetchData } from "../api/fetchData";
 import { Loading } from "@/components/Loading";
