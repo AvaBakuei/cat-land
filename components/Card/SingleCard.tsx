@@ -4,7 +4,7 @@ import { Card, Text, Paper, Grid } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
-import { useImagePlaceholder } from "@/pages/hooks/useImagePlaceholder";
+import { useImagePlaceholder } from "@/components/hooks/useImagePlaceholder";
 
 export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
   const [hover, setHover] = useState(false);

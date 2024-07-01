@@ -5,7 +5,7 @@ import { Header } from "@/components/Header/Header";
 import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
-import { useFetcher } from "./hooks/useFetcher";
+import { useFetcher } from "../components/hooks/useFetcher";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
 
