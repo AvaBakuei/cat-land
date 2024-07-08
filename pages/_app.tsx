@@ -5,6 +5,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import localForage from "localforage";
+import { Header } from "@/components/Header/Header";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
       persistOptions={{ persister: asyncStoragePersister }}
     >
       <MantineProvider theme={theme}>
-        <Component {...pageProps} />
+        <div style={{ padding: "2rem 6rem"}}>
+          <Header />
+          <Component {...pageProps} />
+        </div>
       </MantineProvider>
     </PersistQueryClientProvider>
   );
