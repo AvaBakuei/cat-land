@@ -8,7 +8,7 @@ import { useImagePlaceholder } from "@/components/hooks/useImagePlaceholder";
 
 export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
   const [hover, setHover] = useState(false);
-  const { base64 } = useImagePlaceholder(cardData);
+  const { base64 } = useImagePlaceholder();
 
   const handleMouseEnter = () => setHover(true);
   const handleMouseLeave = () => setHover(false);
