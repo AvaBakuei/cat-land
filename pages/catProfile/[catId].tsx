@@ -4,6 +4,8 @@ import { fetchData } from "../api/fetchData";
 import { Loading } from "@/components/Loading";
 import Image from "next/image";
 import { useImagePlaceholder } from "../../components/hooks/useImagePlaceholder";
+import { Grid, Paper, Title, Text, useMantineTheme, Anchor } from "@mantine/core";
+import styles from "./Cat.module.css";
 
 interface CatProfileProps {
     catProfileData: CatProfileResponse | null;
@@ -11,6 +13,7 @@ interface CatProfileProps {
 }
 
 const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
+    const theme = useMantineTheme();
     const { base64 } = useImagePlaceholder();
     if (error) {
         return <div>Error: {error}</div>;
@@ -19,24 +22,45 @@ const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
         return <Loading />;
     }
 
-    console.log("base64", base64);
+    console.log("catProfileData", catProfileData);
 
     return (
-        <div>
-            <h1>{catProfileData.name}</h1>
-            <p>{catProfileData.description}</p>
-            {catProfileData.imageUrl && base64 && (
-                <Image
-                    src={catProfileData.imageUrl}
-                    alt={catProfileData.name}
-                    width={500}
-                    height={500}
-                    loading="lazy"
-                    placeholder="blur"
-                    blurDataURL={base64}
-                />
-            )}
-        </div>
+        <Paper className={styles.catProfile} shadow="lg">
+            <Grid>
+                <Grid.Col span={{ sm: 6, md: 12, lg: 4 }}>
+                    {catProfileData.imageUrl && base64 && (
+                        <Image
+                            src={catProfileData.imageUrl}
+                            alt={catProfileData.name}
+                            width={500}
+                            height={500}
+                            loading="lazy"
+                            placeholder="blur"
+                            blurDataURL={base64}
+                            className={styles.catImage}
+                        />
+                    )}
+                </Grid.Col>
+                <Grid.Col span={{ sm: 12, md: 12, lg: 8 }} className={styles.catInformation}>
+                    <Title order={1} style={{ color: theme.colors.dark[5] }}>{catProfileData.name}</Title>
+                    <div className={styles.data}>
+                        <Title style={{ color: theme.colors.dark[4] }} order={5}>Origin</Title>
+                        <Text style={{ color: theme.colors.dark[3] }}>{catProfileData.origin}</Text>
+                    </div>
+                    <div className={styles.data}>
+                        <Title style={{ color: theme.colors.dark[4] }} order={5}>Temperament</Title>
+                        <Text style={{ color: theme.colors.dark[3] }}>{catProfileData.temperament}</Text>
+                    </div>
+                    <div className={styles.data}>
+                        <Title style={{ color: theme.colors.dark[4] }} order={5}>Description</Title>
+                        <Text style={{ color: theme.colors.dark[3] }}>{catProfileData.description}</Text>
+                    </div>
+                    <Anchor href={catProfileData.wikipedia_url} target="_blank" className={styles.wikiLink}>
+                        Read More
+                    </Anchor>
+                </Grid.Col>
+            </Grid>
+        </Paper>
     );
 };
 
