@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import { Header } from "@/components/Header/Header";
 import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
@@ -42,7 +41,6 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <Header />
         <EnhancedCardList cardData={data ?? []} />
       </main>
     </>
