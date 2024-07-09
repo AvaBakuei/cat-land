@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useState } from "react";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -7,12 +8,17 @@ import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/hooks/useFetcher";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
+import { useLocalStorage } from "@mantine/hooks";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
+  const [favorites, setFavorites] = useLocalStorage<CardInterface[]>({
+    key: "fav",
+    defaultValue: [],
+  });
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
   const { isLoading, error, data } = useQuery<CardInterface[]>({
@@ -29,6 +35,16 @@ const Home = () => {
     },
   });
 
+  const handleFavorite = (cardData: CardInterface) => {
+    const isAlreadyFavorite = favorites.some((fav) => fav.id === cardData.id);
+    if (isAlreadyFavorite) {
+      const newFavorites = favorites.filter((fav) => fav.id !== cardData.id);
+      setFavorites(newFavorites);
+    } else {
+      setFavorites([...favorites, cardData]);
+    }
+  };
+
   if (isLoading) return <Loading />;
   if (error) return "An error has occurred: " + error.message;
 
@@ -41,7 +57,11 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <EnhancedCardList cardData={data ?? []} />
+        <EnhancedCardList
+          cardData={data ?? []}
+          favorites={favorites}
+          handleFavorite={handleFavorite}
+        />
       </main>
     </>
   );
