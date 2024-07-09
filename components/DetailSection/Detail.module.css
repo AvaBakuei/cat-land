@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+.link{
+  min-width: 100px;
+  text-decoration: none;
+  color: black;
+}
+
+.link {
+  & :global(.mantine-NavLink-body) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
