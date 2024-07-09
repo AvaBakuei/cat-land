@@ -1,4 +1,3 @@
-import { CatProfileResponse } from "../../components/types/catProfileResponse.types";
 import { GetServerSideProps } from "next";
 import { fetchData } from "../api/fetchData";
 import { Loading } from "@/components/Loading";
@@ -13,12 +12,8 @@ import {
   Anchor,
 } from "@mantine/core";
 import styles from "./Cat.module.css";
-import DetailSection from "@/components/DetailSection/DetailSection";
-
-interface CatProfileProps {
-  catProfileData: CatProfileResponse | null;
-  error?: string;
-}
+import { CatProfileProps } from "./catProfile.types";
+import CatProfileDetail from "./CatProfileDetail";
 
 const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
   const theme = useMantineTheme();
@@ -55,19 +50,19 @@ const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
             {catProfileData.name}
           </Title>
 
-          <DetailSection
+          <CatProfileDetail
             className={styles.data}
             title="Origin"
             value={catProfileData.origin}
           />
 
-          <DetailSection
+          <CatProfileDetail
             className={styles.data}
             title="Temperament"
             value={catProfileData.temperament}
           />
 
-          <DetailSection
+          <CatProfileDetail
             className={styles.data}
             title="Description"
             value={catProfileData.description}
