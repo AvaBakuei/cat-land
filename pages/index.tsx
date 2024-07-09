@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useState } from "react";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -16,9 +15,10 @@ const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
   const [favorites, setFavorites] = useLocalStorage<CardInterface[]>({
-    key: "fav",
+    key: "favorites",
     defaultValue: [],
   });
+
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
   const { isLoading, error, data } = useQuery<CardInterface[]>({
@@ -59,7 +59,6 @@ const Home = () => {
       <main className={`${styles.main} ${inter.className}`}>
         <EnhancedCardList
           cardData={data ?? []}
-          favorites={favorites}
           handleFavorite={handleFavorite}
         />
       </main>
