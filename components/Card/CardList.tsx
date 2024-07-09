@@ -5,7 +5,6 @@ import { SingleCard } from "./SingleCard";
 import styles from "./Card.module.css";
 export const CardList: React.FC<CardListProps> = ({
   cardData,
-  favorites,
   handleFavorite,
 }) => {
   return (
@@ -17,7 +16,6 @@ export const CardList: React.FC<CardListProps> = ({
         <SingleCard
           key={card.name}
           cardData={card}
-          favorites={favorites}
           handleFavorite={handleFavorite}
         />
       ))}

@@ -11,12 +11,10 @@ export type HandleFavorite = (cardData: CardInterface) => void;
 
 export interface SingleCardProps {
   cardData: CardInterface;
-  favorites: CardInterface[];
   handleFavorite: HandleFavorite;
 }
 
 export interface CardListProps {
   cardData: CardInterface[];
-  favorites: CardInterface[];
   handleFavorite: HandleFavorite;
 }

@@ -1,41 +1,23 @@
-import { useEffect, useState } from "react";
-import type { CardInterface, SingleCardProps } from "./card.types";
-import {
-  Card,
-  Text,
-  Paper,
-  Grid,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
+import { useState } from "react";
+import type { SingleCardProps } from "./card.types";
+import { Card, Text, Paper, Grid, useMantineTheme } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
 import { useImagePlaceholder } from "@/components/hooks/useImagePlaceholder";
-import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import { FavoriteButton } from "./FavoriteButton";
 
 export const SingleCard: React.FC<SingleCardProps> = ({
   cardData,
-  favorites,
   handleFavorite,
 }) => {
   const theme = useMantineTheme();
   const [hover, setHover] = useState(false);
-  const [isFav, setIsFav] = useState(false);
 
   const { base64 } = useImagePlaceholder();
 
   const handleMouseEnter = () => setHover(true);
   const handleMouseLeave = () => setHover(false);
-  const handleClick = (cardData: CardInterface) => {
-    handleFavorite(cardData);
-    setIsFav(!isFav);
-  };
-
-  useEffect(() => {
-    const isFavorite = favorites.some((fav) => fav.id === cardData.id);
-    setIsFav(isFavorite);
-  }, [favorites]);
 
   return (
     <Grid.Col span={3} className={styles.cardGrid}>
@@ -47,21 +29,7 @@ export const SingleCard: React.FC<SingleCardProps> = ({
         onMouseLeave={handleMouseLeave}
       >
         <div className={styles.imageCard}>
-          <UnstyledButton
-            className={styles.fav}
-            onClick={() => handleClick(cardData)}
-            style={{
-              backgroundColor: isFav
-                ? theme.colors.pink[0]
-                : theme.colors.gray[0],
-            }}
-          >
-            {isFav ? (
-              <IconHeartFilled color={theme.colors.pink[6]} />
-            ) : (
-              <IconHeart stroke={2} color={theme.colors.gray[5]} />
-            )}
-          </UnstyledButton>
+          <FavoriteButton cardData={cardData} handleFavorite={handleFavorite} />
           {base64 && (
             <Image
               src={cardData.imageUrl}
