@@ -1,14 +1,20 @@
 import { useState } from "react";
-import type { CardInterface } from "./card.types";
-import { Card, Text, Paper, Grid } from "@mantine/core";
+import type { SingleCardProps } from "./card.types";
+import { Card, Text, Paper, Grid, useMantineTheme } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
-import { useImagePlaceholder } from "@/pages/hooks/useImagePlaceholder";
+import { useImagePlaceholder } from "@/components/hooks/useImagePlaceholder";
+import { FavoriteButton } from "./FavoriteButton";
 
-export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
+export const SingleCard: React.FC<SingleCardProps> = ({
+  cardData,
+  handleFavorite,
+}) => {
+  const theme = useMantineTheme();
   const [hover, setHover] = useState(false);
-  const { base64 } = useImagePlaceholder(cardData);
+
+  const { base64 } = useImagePlaceholder();
 
   const handleMouseEnter = () => setHover(true);
   const handleMouseLeave = () => setHover(false);
@@ -22,10 +28,8 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <Link
-          href={`/catProfile/${cardData.id}`}
-          className={`${styles.imageCard} ${hover ? styles.hovered : ""}`}
-        >
+        <div className={styles.imageCard}>
+          <FavoriteButton cardData={cardData} handleFavorite={handleFavorite} />
           {base64 && (
             <Image
               src={cardData.imageUrl}
@@ -37,9 +41,10 @@ export const SingleCard = ({ cardData }: { cardData: CardInterface }) => {
               blurDataURL={base64}
             />
           )}
-
+        </div>
+        <Link href={`/catProfile/${cardData.id}`}>
           <Paper shadow="xs" className={styles.name}>
-            <Text size="sm" ta="center" fw={500} c="black">
+            <Text size="sm" ta="center" fw={500} c={theme.colors.gray[7]}>
               {cardData.name}
             </Text>
           </Paper>

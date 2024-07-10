@@ -29,7 +29,7 @@ const navItems = [
   {
 
     label: 'Favorites',
-    url: '/favorite',
+    url: '/favorites',
   },
 ];
 
