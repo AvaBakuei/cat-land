@@ -7,18 +7,15 @@ import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/hooks/useFetcher";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
-import { useLocalStorage } from "@mantine/hooks";
 import { handlerFavorite } from "@/components/utils/localStorageUtils";
+import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
-  const [favorites, setFavorites] = useLocalStorage<CardInterface[]>({
-    key: "favorites",
-    defaultValue: [],
-  });
+  const { favorites, setFavorites } = useFavoriteStorage();
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();

@@ -1,15 +1,12 @@
 import { CardList } from "@/components/Card/CardList";
 import { CardInterface } from "@/components/Card/card.types";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
+import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
 import { removeFavoriteItem } from "@/components/utils/localStorageUtils";
-import { useLocalStorage } from "@mantine/hooks";
 const EnhancedCardList = withDataCheck(CardList);
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useLocalStorage<CardInterface[]>({
-    key: "favorites",
-    defaultValue: [],
-  });
+  const { favorites, setFavorites } = useFavoriteStorage();
 
   const removeFromFavoritesList = (cardData: CardInterface) => {
     removeFavoriteItem(cardData, favorites, setFavorites);
