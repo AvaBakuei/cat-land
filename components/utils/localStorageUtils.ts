@@ -14,3 +14,12 @@ export const handlerFavorite = (
     setFavorites(newFavorites);
   }
 };
+
+export const removeFavoriteItem = (
+  cardData: CardInterface,
+  favorites: CardInterface[],
+  setFavorites: (favorites: CardInterface[]) => void
+) => {
+  const newFavorites = favorites.filter((fav) => fav.id !== cardData.id);
+  setFavorites(newFavorites);
+};
