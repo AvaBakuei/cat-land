@@ -7,12 +7,16 @@ import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/hooks/useFetcher";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
+import { handlerFavorite } from "@/components/utils/localStorageUtils";
+import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
+  const { favorites, setFavorites } = useFavoriteStorage();
+
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
   const { isLoading, error, data } = useQuery<CardInterface[]>({
@@ -29,6 +33,10 @@ const Home = () => {
     },
   });
 
+  const handleFavoritesList = (cardData: CardInterface) => {
+    handlerFavorite(cardData, favorites, setFavorites);
+  };
+
   if (isLoading) return <Loading />;
   if (error) return "An error has occurred: " + error.message;
 
@@ -41,7 +49,10 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <EnhancedCardList cardData={data ?? []} />
+        <EnhancedCardList
+          cardData={data ?? []}
+          handleFavorite={handleFavoritesList}
+        />
       </main>
     </>
   );
