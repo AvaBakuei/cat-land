@@ -8,6 +8,7 @@ import { useFetcher } from "../components/hooks/useFetcher";
 import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
 import { useLocalStorage } from "@mantine/hooks";
+import { handlerFavorite } from "@/components/utils/localStorageUtils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,14 +36,8 @@ const Home = () => {
     },
   });
 
-  const handleFavorite = (cardData: CardInterface) => {
-    const isAlreadyFavorite = favorites.some((fav) => fav.id === cardData.id);
-    if (isAlreadyFavorite) {
-      const newFavorites = favorites.filter((fav) => fav.id !== cardData.id);
-      setFavorites(newFavorites);
-    } else {
-      setFavorites([...favorites, cardData]);
-    }
+  const handleFavoritesList = (cardData: CardInterface) => {
+    handlerFavorite(cardData, favorites, setFavorites);
   };
 
   if (isLoading) return <Loading />;
@@ -59,7 +54,7 @@ const Home = () => {
       <main className={`${styles.main} ${inter.className}`}>
         <EnhancedCardList
           cardData={data ?? []}
-          handleFavorite={handleFavorite}
+          handleFavorite={handleFavoritesList}
         />
       </main>
     </>
