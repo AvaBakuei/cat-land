@@ -42,18 +42,13 @@ export const SingleCard: React.FC<SingleCardProps> = ({
             />
           )}
         </div>
-
-        <Paper shadow="xs" className={styles.name}>
-          <Link
-            href={`/catProfile/${cardData.id}`}
-            className={`${hover ? styles.hovered : ""}`}
-            style={{ textDecoration: "none" }}
-          >
-            <Text size="sm" ta="center" fw={500} c={theme.colors.dark[4]}>
+        <Link href={`/catProfile/${cardData.id}`}>
+          <Paper shadow="xs" className={styles.name}>
+            <Text size="sm" ta="center" fw={500} c={theme.colors.gray[7]}>
               {cardData.name}
             </Text>
-          </Link>
-        </Paper>
+          </Paper>
+        </Link>
       </Card>
     </Grid.Col>
   );
