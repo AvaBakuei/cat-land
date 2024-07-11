@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@mantine/hooks";
-import { CardInterface } from "../Card/card.types";
+import { CardInterface } from "../../Card/card.types";
 
 export const useFavoriteStorage = () => {
   const [favorites, setFavorites] = useLocalStorage<CardInterface[]>({

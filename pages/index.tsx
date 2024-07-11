@@ -4,11 +4,13 @@ import styles from "@/styles/Home.module.css";
 import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
-import { useFetcher } from "../components/hooks/useFetcher";
-import { withDataCheck } from "@/components/hocs/withDataCheck";
+import { useFetcher } from "../components/common/hooks/useFetcher";
+import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
-import { handlerFavorite } from "@/components/utils/localStorageUtils";
-import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
+import { handlerFavorite } from "@/components/common/utils/localStorageUtils";
+import { useFavoriteStorage } from "@/components/common/hooks/useFavoriteStorage";
+import { pickProperties } from "@/components/common/utils/propertyUtils";
+import { PICKED_KEYS } from "@/components/common/constants/cardConstants";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +24,12 @@ const Home = () => {
   const { isLoading, error, data } = useQuery<CardInterface[]>({
     queryKey: ["catList"],
     queryFn: async () => {
-      const catList = await fetchCatList("breeds?limit=4&page=0");
+      const catList: CardInterface[] = await fetchCatList(
+        "breeds?limit=4&page=0"
+      );
+      const newCatList = pickProperties(catList, PICKED_KEYS);
       const catsWithImages = await Promise.all(
-        catList.map(async (cat: any): Promise<CardInterface> => {
+        newCatList.map(async (cat: any): Promise<CardInterface> => {
           const image = await fetchCatImage("images", cat.reference_image_id);
           return { ...cat, imageUrl: image.url };
         })
@@ -32,6 +37,7 @@ const Home = () => {
       return catsWithImages;
     },
   });
+  console.log("datatatatataat", data);
 
   const handleFavoritesList = (cardData: CardInterface) => {
     handlerFavorite(cardData, favorites, setFavorites);

@@ -1,5 +1,5 @@
-import { CardInterface } from "../Card/card.types";
-import { EmptyBlock } from "../EmptyBlock";
+import { CardInterface } from "../../Card/card.types";
+import { EmptyBlock } from "../../EmptyBlock";
 
 export const withDataCheck = <P extends object>(
   WrappedComponent: React.ComponentType<P>

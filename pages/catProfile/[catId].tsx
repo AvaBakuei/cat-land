@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { fetchData } from "../api/fetchData";
 import { Loading } from "@/components/Loading";
 import Image from "next/image";
-import { useImagePlaceholder } from "../../components/hooks/useImagePlaceholder";
+import { useImagePlaceholder } from "../../components/common/hooks/useImagePlaceholder";
 import {
   Grid,
   Paper,
