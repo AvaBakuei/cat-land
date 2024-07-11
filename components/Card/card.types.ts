@@ -5,6 +5,8 @@ export interface CardInterface {
   imageUrl: string;
   description: string;
   href: string;
+  temperament: string;
+  reference_image_id: string;
 }
 
 export type HandleFavorite = (cardData: CardInterface) => void;
