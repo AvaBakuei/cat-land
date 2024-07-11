@@ -4,7 +4,7 @@ import { Card, Text, Paper, Grid, useMantineTheme } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
-import { useImagePlaceholder } from "@/components/hooks/useImagePlaceholder";
+import { useImagePlaceholder } from "@/components/common/hooks/useImagePlaceholder";
 import { FavoriteButton } from "./FavoriteButton";
 
 export const SingleCard: React.FC<SingleCardProps> = ({

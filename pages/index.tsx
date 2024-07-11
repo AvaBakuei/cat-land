@@ -4,13 +4,13 @@ import styles from "@/styles/Home.module.css";
 import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
-import { useFetcher } from "../components/hooks/useFetcher";
-import { withDataCheck } from "@/components/hocs/withDataCheck";
+import { useFetcher } from "../components/common/hooks/useFetcher";
+import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
-import { handlerFavorite } from "@/components/utils/localStorageUtils";
-import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
-import { pickProperties } from "@/components/utils/propertyUtils";
-import { PICKED_KEYS } from "@/components/constants/cardConstants";
+import { handlerFavorite } from "@/components/common/utils/localStorageUtils";
+import { useFavoriteStorage } from "@/components/common/hooks/useFavoriteStorage";
+import { pickProperties } from "@/components/common/utils/propertyUtils";
+import { PICKED_KEYS } from "@/components/common/constants/cardConstants";
 
 const inter = Inter({ subsets: ["latin"] });
 
