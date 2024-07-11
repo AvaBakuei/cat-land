@@ -9,6 +9,8 @@ import { withDataCheck } from "@/components/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
 import { handlerFavorite } from "@/components/utils/localStorageUtils";
 import { useFavoriteStorage } from "@/components/hooks/useFavoriteStorage";
+import { pickProperties } from "@/components/utils/propertyUtils";
+import { PICKED_KEYS } from "@/components/constants/cardConstants";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +24,12 @@ const Home = () => {
   const { isLoading, error, data } = useQuery<CardInterface[]>({
     queryKey: ["catList"],
     queryFn: async () => {
-      const catList = await fetchCatList("breeds?limit=4&page=0");
+      const catList: CardInterface[] = await fetchCatList(
+        "breeds?limit=4&page=0"
+      );
+      const newCatList = pickProperties(catList, PICKED_KEYS);
       const catsWithImages = await Promise.all(
-        catList.map(async (cat: any): Promise<CardInterface> => {
+        newCatList.map(async (cat: any): Promise<CardInterface> => {
           const image = await fetchCatImage("images", cat.reference_image_id);
           return { ...cat, imageUrl: image.url };
         })
@@ -32,6 +37,7 @@ const Home = () => {
       return catsWithImages;
     },
   });
+  console.log("datatatatataat", data);
 
   const handleFavoritesList = (cardData: CardInterface) => {
     handlerFavorite(cardData, favorites, setFavorites);
