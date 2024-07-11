@@ -34,7 +34,7 @@ export const SingleCard: React.FC<SingleCardProps> = ({
             <Image
               src={cardData.imageUrl}
               alt={cardData.name}
-              className={styles.image}
+              className={`${styles.image} ${hover ? styles.hovered : ""}`}
               fill
               loading="lazy"
               placeholder="blur"
