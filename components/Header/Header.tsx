@@ -1,42 +1,24 @@
-import { Button } from '@mantine/core';
-import Link from 'next/link'
+import { Button } from "@mantine/core";
+import Link from "next/link";
 
-
-import { IconPawFilled } from '@tabler/icons-react';
-import classes from './Header.module.css';
+import { IconPawFilled } from "@tabler/icons-react";
+import classes from "./Header.module.css";
 
 const navItems = [
   {
-
-    label: 'Home',
-    url: '/',
+    label: "Home",
+    url: "/",
   },
   {
-
-    label: 'About Us',
-    url: '/about',
-  },
-  {
-
-    label: 'Sevice',
-    url: '/service',
-  },
-  {
-
-    label: 'Food',
-    url: '/food',
-  },
-  {
-
-    label: 'Favorites',
-    url: '/favorites',
+    label: "Favorites",
+    url: "/favorites",
   },
 ];
 
 export function Header() {
   return (
     <header className={classes.header}>
-      <IconPawFilled style={{ width: 50, height: 50, }} color="#FFC078" />
+      <IconPawFilled style={{ width: 50, height: 50 }} color="#FFC078" />
       <nav className={classes.nav}>
         {navItems.map((item) => (
           <Link href={item.url} key={item.label} className={classes.link}>
@@ -44,7 +26,9 @@ export function Header() {
           </Link>
         ))}
       </nav>
-      <Button variant="filled" color="orange.3">Sign Up</Button>
+      <Button variant="filled" color="orange.3">
+        Sign Up
+      </Button>
     </header>
   );
 }
