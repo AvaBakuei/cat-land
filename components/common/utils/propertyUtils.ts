@@ -1,7 +1,4 @@
 import _ from "lodash";
-export function pickProperties<T>(
-    dataList: T[],
-    keys: (keyof T)[]
-): Pick<T, keyof T>[] {
-    return dataList.map((item) => _.pick(item, keys) as Pick<T, keyof T>);
-}
+export const pickProperties = <T>(item: T, keys: (keyof T)[]): Pick<T, keyof T> => {
+  return _.pick(item, keys) as Pick<T, keyof T>;
+};
