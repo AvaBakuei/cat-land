@@ -8,3 +8,8 @@ export const PICKED_KEYS: (keyof CardInterface)[] = [
   "description",
   "reference_image_id",
 ];
+
+export const DEFAULT_VALUE = {
+  key: "favorites",
+  defaultValue: [],
+};

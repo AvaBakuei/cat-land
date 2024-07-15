@@ -8,16 +8,20 @@ import { useFetcher } from "../components/common/hooks/useFetcher";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { CardInterface } from "@/components/Card/card.types";
 import { handlerFavorite } from "@/components/common/utils/localStorageUtils";
-import { useFavoriteStorage } from "@/components/common/hooks/useFavoriteStorage";
 import { pickProperties } from "@/components/common/utils/propertyUtils";
-import { PICKED_KEYS } from "@/components/common/constants/cardConstants";
+import {
+  DEFAULT_VALUE,
+  PICKED_KEYS,
+} from "@/components/common/constants/cardConstants";
+import { useLocalStorage } from "@mantine/hooks";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const EnhancedCardList = withDataCheck(CardList);
 
 const Home = () => {
-  const { favorites, setFavorites } = useFavoriteStorage();
+  const [favorites, setFavorites] =
+    useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -27,11 +31,15 @@ const Home = () => {
       const catList: CardInterface[] = await fetchCatList(
         "breeds?limit=4&page=0"
       );
-      const newCatList = pickProperties(catList, PICKED_KEYS);
+      const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
       const catsWithImages = await Promise.all(
-        newCatList.map(async (cat: any): Promise<CardInterface> => {
-          const image = await fetchCatImage("images", cat.reference_image_id);
-          return { ...cat, imageUrl: image.url };
+        newCatList.map((cat: CardInterface): Promise<CardInterface> => {
+          return fetchCatImage("images", cat.reference_image_id).then(
+            (image) => ({
+              ...cat,
+              imageUrl: image.url,
+            })
+          );
         })
       );
       return catsWithImages;
