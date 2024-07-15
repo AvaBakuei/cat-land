@@ -33,9 +33,13 @@ const Home = () => {
       );
       const newCatList = pickProperties(catList, PICKED_KEYS);
       const catsWithImages = await Promise.all(
-        newCatList.map(async (cat: any): Promise<CardInterface> => {
-          const image = await fetchCatImage("images", cat.reference_image_id);
-          return { ...cat, imageUrl: image.url };
+        newCatList.map((cat: CardInterface): Promise<CardInterface> => {
+          return fetchCatImage("images", cat.reference_image_id).then(
+            (image) => ({
+              ...cat,
+              imageUrl: image.url,
+            })
+          );
         })
       );
       return catsWithImages;
