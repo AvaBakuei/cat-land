@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
@@ -14,6 +15,10 @@ import {
   PICKED_KEYS,
 } from "@/components/common/constants/cardConstants";
 import { useLocalStorage } from "@mantine/hooks";
+import {
+  RandomCatModal,
+  RandomCatModalRef,
+} from "@/components/Modal/RandomCatModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +27,20 @@ const EnhancedCardList = withDataCheck(CardList);
 const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
+  const modalRef = useRef<RandomCatModalRef>(null);
+  const[isVerify, setIsVerify] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (modalRef.current) {
+      modalRef.current.openModal();
+    }
+  }, []);
+
+  const handleVerifyCode = (value: string) => {
+    if (value === "kitten") {
+      setIsVerify(true);
+    }
+  };
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -63,6 +82,14 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
+        <RandomCatModal
+          ref={modalRef}
+          title="Enter verification code"
+          codeLength={6}
+          buttonTitle="Verify Code"
+          handleVerifyCode={handleVerifyCode}
+          isVerify={isVerify}
+        />
         <EnhancedCardList
           cardData={data ?? []}
           handleFavorite={handleFavoritesList}
