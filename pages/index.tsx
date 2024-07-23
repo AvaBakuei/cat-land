@@ -28,7 +28,8 @@ const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
   const modalRef = useRef<RandomCatModalRef>(null);
-  const[isVerify, setIsVerify] = useState<boolean>(false)
+  const [isVerify, setIsVerify] = useState<boolean>(false);
+  const [catSrc, setCatSrc] = useState<string>("");
 
   useEffect(() => {
     if (modalRef.current) {
@@ -36,11 +37,6 @@ const Home = () => {
     }
   }, []);
 
-  const handleVerifyCode = (value: string) => {
-    if (value === "kitten") {
-      setIsVerify(true);
-    }
-  };
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -48,7 +44,7 @@ const Home = () => {
     queryKey: ["catList"],
     queryFn: async () => {
       const catList: CardInterface[] = await fetchCatList(
-        "breeds?limit=4&page=0"
+        "breeds?limit=7&page=0"
       );
       const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
       const catsWithImages = await Promise.all(
@@ -64,7 +60,22 @@ const Home = () => {
       return catsWithImages;
     },
   });
-  console.log("datatatatataat", data);
+  const getDailyItem = (items: CardInterface[]): CardInterface => {
+    const today = new Date();
+    const index = today.getDate() % items.length;
+    return items[index];
+
+  };
+
+  const handleVerifyCode = (value: string) => {
+    if (value === "kitten") {
+      setIsVerify(true);
+      if (data?.length) {
+        const dailyCat = getDailyItem(data);
+        setCatSrc(dailyCat.imageUrl)
+      }
+    }
+  };
 
   const handleFavoritesList = (cardData: CardInterface) => {
     handlerFavorite(cardData, favorites, setFavorites);
@@ -89,6 +100,7 @@ const Home = () => {
           buttonTitle="Verify Code"
           handleVerifyCode={handleVerifyCode}
           isVerify={isVerify}
+          catSrc={catSrc}
         />
         <EnhancedCardList
           cardData={data ?? []}
