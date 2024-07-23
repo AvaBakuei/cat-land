@@ -24,7 +24,8 @@
     "next": "14.2.4",
     "plaiceholder": "^3.0.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-jss": "^10.10.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.6",
