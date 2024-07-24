@@ -19,6 +19,7 @@ import {
   RandomCatModal,
   RandomCatModalRef,
 } from "@/components/Modal/RandomCatModal";
+import { getDailyItem } from "@/components/common/utils/getDailyItem";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,6 @@ const Home = () => {
       modalRef.current.openModal();
     }
   }, []);
-
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -60,19 +60,13 @@ const Home = () => {
       return catsWithImages;
     },
   });
-  const getDailyItem = (items: CardInterface[]): CardInterface => {
-    const today = new Date();
-    const index = today.getDate() % items.length;
-    return items[index];
-
-  };
 
   const handleVerifyCode = (value: string) => {
     if (value === "kitten") {
       setIsVerify(true);
       if (data?.length) {
         const dailyCat = getDailyItem(data);
-        setCatSrc(dailyCat.imageUrl)
+        setCatSrc(dailyCat.imageUrl);
       }
     }
   };
