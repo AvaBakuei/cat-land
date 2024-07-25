@@ -43,7 +43,7 @@ const Home = () => {
     queryKey: ["catList"],
     queryFn: async () => {
       const catList: CardInterface[] = await fetchCatList(
-        "breeds?limit=7&page=0"
+        "breeds?limit=8&page=0"
       );
       const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
       const catsWithImages = await Promise.all(
