@@ -15,8 +15,7 @@ import {
   PICKED_KEYS,
 } from "@/components/common/constants/cardConstants";
 import { useLocalStorage } from "@mantine/hooks";
-import {
-  RandomCatModal,
+import RandomCatModal, {
   RandomCatModalRef,
 } from "@/components/Modal/RandomCatModal";
 import { getDailyItem } from "@/components/common/utils/getDailyItem";
