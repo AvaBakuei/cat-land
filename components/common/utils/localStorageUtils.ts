@@ -1,4 +1,5 @@
-import { CardInterface } from "../../Card/card.types";
+import { CardInterface } from "../types/card.types";
+import { localStorageInterFace } from "../types/localStorage.types";
 
 export const handlerFavorite = (
   cardData: CardInterface,
@@ -22,4 +23,32 @@ export const removeFavoriteItem = (
 ) => {
   const newFavorites = favorites.filter((fav) => fav.id !== cardData.id);
   setFavorites(newFavorites);
+};
+
+// Set Dily Cat
+export const setWithExpiry = (key: string, value: object): void => {
+  const now = new Date();
+  const ttl = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const item: localStorageInterFace = {
+    value,
+    expiry: now.getTime() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
+};
+
+// Get Dily Cat
+export const getWithExpiry = (key: string) => {
+  const itemValue = localStorage.getItem(key);
+  if (!itemValue) {
+    return null;
+  }
+
+  const item = JSON.parse(itemValue);
+  const now = new Date();
+  if (now.getTime() > item.expiry) {
+    localStorage.removeItem(key);
+    return null;
+  }
+
+  return item.value;
 };
