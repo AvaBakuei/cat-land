@@ -3,9 +3,12 @@ import { MantineTheme } from "@mantine/core";
 
 const useStyles = createUseStyles((theme: MantineTheme) => ({
     modal: {
-        padding: "1rem",
+        "& .mantine-Modal-body": {
+            padding: "1rem",
+        },
         "& .mantine-Modal-header": {
-            backgroundColor: "transparent",
+            minHeight: "auto !important",
+            padding: "1rem 1rem 0 !important",
         },
         "& .mantine-Modal-close": {
             borderRadius: "50%",
@@ -16,30 +19,40 @@ const useStyles = createUseStyles((theme: MantineTheme) => ({
             },
         },
     },
+    modalTitle: {
+        color: theme.colors.gray[7],
+    },
+    modalBody: {
+        height: "350px !important",
+    },
+    modalImage: {
+        position: "relative !important",
+        objectFit: "cover",
+        borderRadius: "0.5rem",
+    },
     modalIcon: {
         color: theme.colors.orange[4],
     },
-    modalTitle: {
-        margin: "1rem 0",
-        color: theme.colors.gray[7],
+    modalText: {
+        marginTop: "0.5rem",
+        color: theme.colors.gray[6],
     },
     pinStyle: {
-        margin: "2rem 0",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "1rem 0",
     },
     modalBtn: {
-        backgroundColor: theme.colors.cyan[5],
+        backgroundColor: theme.colors.orange[4],
 
         "&:hover": {
-            backgroundColor: theme.colors.cyan[7],
+            backgroundColor: theme.colors.orange[6],
         },
+    },
 
-    },
-    modalBody: {
-        width: "100%",
-        height: "227px",
-    },
-    modalImage: {
-        objectFit: "cover",
+    modalLink: {
+        marginTop: "0.5rem",
     },
 }));
 
