@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
@@ -7,8 +7,8 @@ import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/common/hooks/useFetcher";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
-import { CardInterface } from "@/components/Card/card.types";
-import { handlerFavorite } from "@/components/common/utils/localStorageUtils";
+import { CardInterface } from "@/components/common/types/card.types";
+import { getWithExpiry, handlerFavorite, setWithExpiry } from "@/components/common/utils/localStorageUtils";
 import { pickProperties } from "@/components/common/utils/propertyUtils";
 import {
   DEFAULT_VALUE,
@@ -25,13 +25,26 @@ const EnhancedCardList = withDataCheck(CardList);
 const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
+  const [catList, setCatList] = useState<CardInterface[]>();
   const [isVerify, setIsVerify] = useState<boolean>(false);
-  const [catSrc, setCatSrc] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [breedCat, setBreedCat] = useState<CardInterface>();
+  const [pinError, setPinError] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsModalOpen(!isModalOpen);
-  }, []);
+    const modalShown = getWithExpiry("daily-cat-breed");
+    if (!modalShown && catList?.length) {
+      setIsModalOpen(true);
+      const dailyCat = getDailyItem(catList);
+      setBreedCat(dailyCat)
+      console.log("dailyCat", dailyCat);
+      setWithExpiry("daily-cat-breed", dailyCat);
+    }
+
+  }, [catList]);
+
+  console.log("breedCat", breedCat);
+
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -39,7 +52,7 @@ const Home = () => {
     queryKey: ["catList"],
     queryFn: async () => {
       const catList: CardInterface[] = await fetchCatList(
-        "breeds?limit=7&page=0"
+        "breeds?limit=8&page=0"
       );
       const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
       const catsWithImages = await Promise.all(
@@ -52,18 +65,17 @@ const Home = () => {
           );
         })
       );
+      setCatList(catsWithImages);
       return catsWithImages;
     },
   });
 
   const handleVerifyCode = (value: string) => {
-    if (value === "kitten") {
+    const catBreedStr = breedCat?.name.split(" ").join("");
+    if (value.toLowerCase() === catBreedStr?.toLowerCase()) {
       setIsVerify(true);
-      if (data?.length) {
-        const dailyCat = getDailyItem(data);
-        setCatSrc(dailyCat.imageUrl);
-      }
     }
+    setPinError(true)
   };
 
   const handleFavoritesList = (cardData: CardInterface) => {
@@ -85,13 +97,12 @@ const Home = () => {
         <RandomCatModal
           opened={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Enter verification code"
-          codeLength={6}
-          buttonTitle="Verify Code"
+          catInfo={breedCat}
           handleVerifyCode={handleVerifyCode}
           isVerify={isVerify}
-          catSrc={catSrc}
+          pinError={pinError}
         />
+
         <EnhancedCardList
           cardData={data ?? []}
           handleFavorite={handleFavoritesList}
