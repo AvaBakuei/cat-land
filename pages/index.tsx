@@ -8,7 +8,11 @@ import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/common/hooks/useFetcher";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { CardInterface } from "@/components/common/types/card.types";
-import { getWithExpiry, handlerFavorite, setWithExpiry } from "@/components/common/utils/localStorageUtils";
+import {
+  getWithExpiry,
+  handlerFavorite,
+  setWithExpiry,
+} from "@/components/common/utils/localStorageUtils";
 import { pickProperties } from "@/components/common/utils/propertyUtils";
 import {
   DEFAULT_VALUE,
@@ -36,15 +40,10 @@ const Home = () => {
     if (!modalShown && catList?.length) {
       setIsModalOpen(true);
       const dailyCat = getDailyItem(catList);
-      setBreedCat(dailyCat)
-      console.log("dailyCat", dailyCat);
+      setBreedCat(dailyCat);
       setWithExpiry("daily-cat-breed", dailyCat);
     }
-
   }, [catList]);
-
-  console.log("breedCat", breedCat);
-
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -75,7 +74,7 @@ const Home = () => {
     if (value.toLowerCase() === catBreedStr?.toLowerCase()) {
       setIsVerify(true);
     }
-    setPinError(true)
+    setPinError(true);
   };
 
   const handleFavoritesList = (cardData: CardInterface) => {
