@@ -1,4 +1,4 @@
-import { CatProfileResponse } from "../../components/common/types/catProfileResponse.types";
+import { CatProfileResponse } from "./catProfileResponse.types";
 
 export interface CatProfileProps {
   catProfileData: CatProfileResponse | null;

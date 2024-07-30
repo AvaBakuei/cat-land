@@ -1,5 +1,5 @@
 import { CardList } from "@/components/Card/CardList";
-import { CardInterface } from "@/components/Card/card.types";
+import { CardInterface } from "@/components/common/types/card.types";
 import { DEFAULT_VALUE } from "@/components/common/constants/cardConstants";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { removeFavoriteItem } from "@/components/common/utils/localStorageUtils";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Title, Text, useMantineTheme } from "@mantine/core";
-import { CatProfileDetailProps } from "./catProfile.types";
+import { CatProfileDetailProps } from "../../components/common/types/catProfile.types";
 
 const CatProfileDetail: React.FC<CatProfileDetailProps> = ({
   title,

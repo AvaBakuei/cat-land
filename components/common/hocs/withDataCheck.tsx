@@ -1,4 +1,4 @@
-import { CardInterface } from "../../Card/card.types";
+import { CardInterface } from "../types/card.types";
 import { EmptyBlock } from "../../EmptyBlock";
 
 export const withDataCheck = <P extends object>(

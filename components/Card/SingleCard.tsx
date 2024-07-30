@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SingleCardProps } from "./card.types";
+import type { SingleCardProps } from "../common/types/card.types";
 import { Card, Text, Paper, Grid, useMantineTheme } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";

@@ -12,7 +12,7 @@ import {
   Anchor,
 } from "@mantine/core";
 import styles from "./Cat.module.css";
-import { CatProfileProps } from "./catProfile.types";
+import { CatProfileProps } from "../../components/common/types/catProfile.types";
 import CatProfileDetail from "./CatProfileDetail";
 
 const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {

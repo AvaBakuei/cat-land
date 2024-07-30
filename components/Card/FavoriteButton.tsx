@@ -2,7 +2,7 @@ import { UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 import styles from "./Card.module.css";
 import { useEffect, useState } from "react";
-import { CardInterface, SingleCardProps } from "./card.types";
+import { CardInterface, SingleCardProps } from "../common/types/card.types";
 import { readLocalStorageValue } from "@mantine/hooks";
 
 export const FavoriteButton: React.FC<SingleCardProps> = ({
@@ -11,7 +11,7 @@ export const FavoriteButton: React.FC<SingleCardProps> = ({
 }) => {
   const [isFav, setIsFav] = useState(false);
   const theme = useMantineTheme();
-    const favorites: CardInterface[] = readLocalStorageValue({ key: "favorites" });
+  const favorites: CardInterface[] = readLocalStorageValue({ key: "favorites" });
 
   const handleClick = (cardData: CardInterface) => {
     handleFavorite(cardData);
