@@ -15,10 +15,7 @@ import {
   PICKED_KEYS,
 } from "@/components/common/constants/cardConstants";
 import { useLocalStorage } from "@mantine/hooks";
-import {
-  RandomCatModal,
-  RandomCatModalRef,
-} from "@/components/Modal/RandomCatModal";
+import { RandomCatModal } from "@/components/Modal/RandomCatModal";
 import { getDailyItem } from "@/components/common/utils/getDailyItem";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,14 +25,12 @@ const EnhancedCardList = withDataCheck(CardList);
 const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
-  const modalRef = useRef<RandomCatModalRef>(null);
   const [isVerify, setIsVerify] = useState<boolean>(false);
   const [catSrc, setCatSrc] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (modalRef.current) {
-      modalRef.current.openModal();
-    }
+    setIsModalOpen(!isModalOpen);
   }, []);
 
   const { data: fetchCatList } = useFetcher();
@@ -88,7 +83,8 @@ const Home = () => {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <RandomCatModal
-          ref={modalRef}
+          opened={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
           title="Enter verification code"
           codeLength={6}
           buttonTitle="Verify Code"

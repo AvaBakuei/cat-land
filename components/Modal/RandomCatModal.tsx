@@ -13,73 +13,68 @@ interface RandomCatModalProps {
     isVerify: boolean;
     handleVerifyCode: (value: string) => void;
     catSrc: string;
+    opened: boolean;
+    onClose: () => void;
 }
 
-export interface RandomCatModalRef {
-    openModal: () => void;
-}
+export const RandomCatModal: React.FC<RandomCatModalProps> = ({
+    title,
+    codeLength,
+    buttonTitle,
+    isVerify,
+    handleVerifyCode,
+    catSrc,
+    opened,
+    onClose,
+}) => {
+    const classes = useStyles({ theme: useMantineTheme() });
+    const [value, setValue] = useState<string>("");
+    const { base64 } = useImagePlaceholder();
 
-export const RandomCatModal = forwardRef<
-    RandomCatModalRef,
-    RandomCatModalProps
->(
-    (
-        { title, codeLength, buttonTitle, isVerify, handleVerifyCode, catSrc },
-        ref
-    ) => {
-        const classes = useStyles({ theme: useMantineTheme() });
-        const [opened, { open, close }] = useDisclosure(false);
-        const [value, setValue] = useState<string>("");
-        const { base64 } = useImagePlaceholder();
+    const onChange = (e: string) => {
+        setValue(e);
+    };
 
-        useImperativeHandle(ref, () => ({
-            openModal: open,
-        }));
-        const onChange = (e: string) => {
-            setValue(e);
-        };
+    const handleModal = () => {
+        handleVerifyCode(value);
+    };
 
-        const handleModal = () => {
-            handleVerifyCode(value);
-        };
-
-        return (
-            <>
-                <Modal
-                    opened={opened}
-                    onClose={close}
-                    title={<IconPaw stroke={2} className={classes.modalIcon} />}
-                    className={classes.modal}
-                >
-                    {!isVerify ? (
-                        <>
-                            <Text size="xl" fw="500" className={classes.modalTitle}>
-                                {title}
-                            </Text>
-                            <PinInput
-                                className={classes.pinStyle}
-                                length={codeLength}
-                                onChange={onChange}
-                            />
-                            <Button onClick={handleModal} className={classes.modalBtn}>
-                                {buttonTitle}
-                            </Button>
-                        </>
-                    ) : (
-                        <div className={classes.modalBody}>
-                            <Image
-                                className={classes.modalImage}
-                                src={catSrc}
-                                alt="Cat Image"
-                                fill
-                                loading="lazy"
-                                placeholder="blur"
-                                blurDataURL={base64}
-                            />
-                        </div>
-                    )}
-                </Modal>
-            </>
-        );
-    }
-);
+    return (
+        <>
+            <Modal
+                opened={opened}
+                onClose={onClose}
+                title={<IconPaw stroke={2} className={classes.modalIcon} />}
+                className={classes.modal}
+            >
+                {!isVerify ? (
+                    <>
+                        <Text size="xl" fw="500" className={classes.modalTitle}>
+                            {title}
+                        </Text>
+                        <PinInput
+                            className={classes.pinStyle}
+                            length={codeLength}
+                            onChange={onChange}
+                        />
+                        <Button onClick={handleModal} className={classes.modalBtn}>
+                            {buttonTitle}
+                        </Button>
+                    </>
+                ) : (
+                    <div className={classes.modalBody}>
+                        <Image
+                            className={classes.modalImage}
+                            src={catSrc}
+                            alt="Cat Image"
+                            fill
+                            loading="lazy"
+                            placeholder="blur"
+                            blurDataURL={base64}
+                        />
+                    </div>
+                )}
+            </Modal>
+        </>
+    );
+};
