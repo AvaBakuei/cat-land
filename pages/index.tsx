@@ -18,6 +18,7 @@ import {
   DEFAULT_VALUE,
   PICKED_KEYS,
 } from "@/components/common/constants/cardConstants";
+import { Pagination } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { RandomCatModal } from "@/components/Modal/RandomCatModal";
 import { getDailyItem } from "@/components/common/utils/getDailyItem";
@@ -29,21 +30,13 @@ const EnhancedCardList = withDataCheck(CardList);
 const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
-  const [catList, setCatList] = useState<CardInterface[]>();
+  const [catList, setCatList] = useState<CardInterface[]>([]);
   const [isVerify, setIsVerify] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [breedCat, setBreedCat] = useState<CardInterface>();
   const [pinError, setPinError] = useState<boolean>(false);
-
-  useEffect(() => {
-    const modalShown = getWithExpiry("daily-cat-breed");
-    if (!modalShown && catList?.length) {
-      setIsModalOpen(true);
-      const dailyCat = getDailyItem(catList);
-      setBreedCat(dailyCat);
-      setWithExpiry("daily-cat-breed", dailyCat);
-    }
-  }, [catList]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 8;
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -51,7 +44,7 @@ const Home = () => {
     queryKey: ["catList"],
     queryFn: async () => {
       const catList: CardInterface[] = await fetchCatList(
-        "breeds?limit=8&page=0"
+        "breeds?limit=21&page=0"
       );
       const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
       const catsWithImages = await Promise.all(
@@ -69,12 +62,26 @@ const Home = () => {
     },
   });
 
-  const handleVerifyCode = (value: string) => {
-    const catBreedStr = breedCat?.name.split(" ").join("");
-    if (value.toLowerCase() === catBreedStr?.toLowerCase()) {
-      setIsVerify(true);
+  useEffect(() => {
+    if (catList?.length) {
+      const modalShown = getWithExpiry("daily-cat-breed");
+      if (!modalShown) {
+        setIsModalOpen(true);
+        const dailyCat = getDailyItem(catList);
+        setBreedCat(dailyCat);
+        setWithExpiry("daily-cat-breed", dailyCat);
+      }
     }
-    setPinError(true);
+  }, [catList]);
+
+  const handleVerifyCode = (value: string) => {
+    const catBreedStr = breedCat?.name.split(" ").join("").toLowerCase();
+    if (value.toLowerCase() === catBreedStr) {
+      setIsVerify(true);
+      setPinError(false);
+    } else {
+      setPinError(true);
+    }
   };
 
   const handleFavoritesList = (cardData: CardInterface) => {
@@ -83,6 +90,10 @@ const Home = () => {
 
   if (isLoading) return <Loading />;
   if (error) return "An error has occurred: " + error.message;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = catList.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(catList.length / itemsPerPage);
 
   return (
     <>
@@ -103,8 +114,14 @@ const Home = () => {
         />
 
         <EnhancedCardList
-          cardData={data ?? []}
+          cardData={currentItems}
           handleFavorite={handleFavoritesList}
+        />
+        <Pagination
+          value={currentPage}
+          onChange={setCurrentPage}
+          total={totalPages}
+          color="orange.6" size="sm" withEdges
         />
       </main>
     </>
