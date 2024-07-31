@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   Modal,
   Text,
@@ -6,15 +7,15 @@ import {
   PinInput,
   useMantineTheme,
   Center,
-  Anchor,
-  Paper,
   Title,
+  Accordion,
+  Anchor,
 } from "@mantine/core";
+import { IconBulb, IconPawFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import { useImagePlaceholder } from "@/components/common/hooks/useImagePlaceholder";
 import useStyles from "../common/hooks/useStyles";
 import { CardInterface } from "../common/types/card.types";
-import Link from "next/link";
 
 interface RandomCatModalProps {
   catInfo: CardInterface | undefined;
@@ -56,7 +57,8 @@ export const RandomCatModal: React.FC<RandomCatModalProps> = ({
           onClose={onClose}
           title={
             <Text ta="center" size="lg" fw="500" className={classes.modalTitle}>
-              Guess the Cat Breed!
+              Guess the Cat Breed
+              <IconPawFilled className={classes.modalTitleIcon} />
             </Text>
           }
           className={classes.modal}
@@ -89,6 +91,27 @@ export const RandomCatModal: React.FC<RandomCatModalProps> = ({
                 size="xs"
                 error={pinError}
               />
+              <Accordion variant="filled">
+                <Accordion.Item key={catInfo.name} value={catInfo.name}>
+                  <Accordion.Control
+                    icon={
+                      <IconBulb stroke={2} className={classes.accordianIcon} />
+                    }
+                  >
+                    Need a hint?
+                    <Anchor href="#" ml="4px">
+                      Click here.
+                    </Anchor>
+                  </Accordion.Control>
+                  <Accordion.Panel>
+                    This breed originates from
+                    <Title order={6} ml="4px">
+                      {catInfo.origin}.
+                    </Title>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
+
               <Center>
                 <Button onClick={handleModal} className={classes.modalBtn}>
                   Verify Code
