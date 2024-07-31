@@ -40,7 +40,7 @@ To run the project, you need to set up environment variables. Create a ```.env.l
 Replace `your_api_key_here` with your actual API key.
 
 **Running the Project**
-To start the development server, run:
+To start the development server, run the following:
 
 Using npm:
 
@@ -52,6 +52,10 @@ Or using yarn:
 
 Open http://localhost:3000 with your browser to see the result.
 
+The deployed version is available at the following link: [Cat Land 😼](https://cat-land-world.vercel.app/)
 
-Thank you for checking out Cat Land! If you have any questions or feedback, feel free to open an issue or reach out to me. Enjoy exploring the world of cats! 🐱
+Thank you for checking out Cat Land! If you have any questions or feedback, feel free to open an issue or reach out to me. Enjoy exploring the world of cats! 😻
+
+<img width="1414" alt="Screenshot 2024-07-25 at 8 19 25 PM" src="https://github.com/user-attachments/assets/a4cfb141-013f-42c8-8934-9474cafa32a2">
+
 
