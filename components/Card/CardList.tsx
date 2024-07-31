@@ -1,4 +1,4 @@
-import type { CardListProps } from "./card.types";
+import type { CardListProps } from "../common/types/card.types";
 import { Grid } from "@mantine/core";
 
 import { SingleCard } from "./SingleCard";

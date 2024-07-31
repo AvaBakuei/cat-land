@@ -1,4 +1,4 @@
-import { CardInterface } from "../../Card/card.types";
+import { CardInterface } from "../types/card.types";
 
 export const PICKED_KEYS: (keyof CardInterface)[] = [
   "id",

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
@@ -7,17 +7,19 @@ import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
 import { useFetcher } from "../components/common/hooks/useFetcher";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
-import { CardInterface } from "@/components/Card/card.types";
-import { handlerFavorite } from "@/components/common/utils/localStorageUtils";
+import { CardInterface } from "@/components/common/types/card.types";
+import {
+  getWithExpiry,
+  handlerFavorite,
+  setWithExpiry,
+} from "@/components/common/utils/localStorageUtils";
 import { pickProperties } from "@/components/common/utils/propertyUtils";
 import {
   DEFAULT_VALUE,
   PICKED_KEYS,
 } from "@/components/common/constants/cardConstants";
 import { useLocalStorage } from "@mantine/hooks";
-import RandomCatModal, {
-  RandomCatModalRef,
-} from "@/components/Modal/RandomCatModal";
+import { RandomCatModal } from "@/components/Modal/RandomCatModal";
 import { getDailyItem } from "@/components/common/utils/getDailyItem";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,15 +29,21 @@ const EnhancedCardList = withDataCheck(CardList);
 const Home = () => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
-  const modalRef = useRef<RandomCatModalRef>(null);
+  const [catList, setCatList] = useState<CardInterface[]>();
   const [isVerify, setIsVerify] = useState<boolean>(false);
-  const [catSrc, setCatSrc] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [breedCat, setBreedCat] = useState<CardInterface>();
+  const [pinError, setPinError] = useState<boolean>(false);
 
   useEffect(() => {
-    if (modalRef.current) {
-      modalRef.current.openModal();
+    const modalShown = getWithExpiry("daily-cat-breed");
+    if (!modalShown && catList?.length) {
+      setIsModalOpen(true);
+      const dailyCat = getDailyItem(catList);
+      setBreedCat(dailyCat);
+      setWithExpiry("daily-cat-breed", dailyCat);
     }
-  }, []);
+  }, [catList]);
 
   const { data: fetchCatList } = useFetcher();
   const { data: fetchCatImage } = useFetcher();
@@ -56,18 +64,17 @@ const Home = () => {
           );
         })
       );
+      setCatList(catsWithImages);
       return catsWithImages;
     },
   });
 
   const handleVerifyCode = (value: string) => {
-    if (value === "kitten") {
+    const catBreedStr = breedCat?.name.split(" ").join("");
+    if (value.toLowerCase() === catBreedStr?.toLowerCase()) {
       setIsVerify(true);
-      if (data?.length) {
-        const dailyCat = getDailyItem(data);
-        setCatSrc(dailyCat.imageUrl);
-      }
     }
+    setPinError(true);
   };
 
   const handleFavoritesList = (cardData: CardInterface) => {
@@ -87,14 +94,14 @@ const Home = () => {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <RandomCatModal
-          ref={modalRef}
-          title="Enter verification code"
-          codeLength={6}
-          buttonTitle="Verify Code"
+          opened={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          catInfo={breedCat}
           handleVerifyCode={handleVerifyCode}
           isVerify={isVerify}
-          catSrc={catSrc}
+          pinError={pinError}
         />
+
         <EnhancedCardList
           cardData={data ?? []}
           handleFavorite={handleFavoritesList}
