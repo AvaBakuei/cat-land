@@ -8,10 +8,7 @@ export const CardList: React.FC<CardListProps> = ({
   handleFavorite,
 }) => {
   return (
-    <Grid
-      gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}
-      className={styles.grid}
-    >
+    <Grid grow className={styles.grid}>
       {cardData?.map((card) => (
         <SingleCard
           key={card.name}
