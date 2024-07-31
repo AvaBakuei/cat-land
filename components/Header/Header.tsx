@@ -26,7 +26,7 @@ export function Header() {
           </Link>
         ))}
       </nav>
-      <Button variant="filled" color="orange.3">
+      <Button variant="filled" color="orange.4">
         Sign Up
       </Button>
     </header>

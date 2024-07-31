@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { SingleCardProps } from "../common/types/card.types";
-import { Card, Text, Paper, Grid, useMantineTheme } from "@mantine/core";
+import { Card, Text, Paper, SimpleGrid, useMantineTheme } from "@mantine/core";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export const SingleCard: React.FC<SingleCardProps> = ({
   const handleMouseLeave = () => setHover(false);
 
   return (
-    <Grid.Col span={3} className={styles.cardGrid}>
+    <SimpleGrid cols={4} className={styles.cardGrid}>
       <Card
         shadow="sm"
         radius="md"
@@ -50,6 +50,6 @@ export const SingleCard: React.FC<SingleCardProps> = ({
           </Paper>
         </Link>
       </Card>
-    </Grid.Col>
+    </SimpleGrid>
   );
 };
