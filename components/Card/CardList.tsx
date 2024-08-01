@@ -7,9 +7,10 @@ export const CardList: React.FC<CardListProps> = ({
   cardData,
   handleFavorite,
 }) => {
+  const cards = Array.isArray(cardData) ? cardData : [];
   return (
     <Grid grow className={styles.grid}>
-      {cardData?.map((card) => (
+      {cards?.map((card) => (
         <SingleCard
           key={card.name}
           cardData={card}

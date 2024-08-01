@@ -52,3 +52,22 @@ export const getWithExpiry = (key: string) => {
 
   return item.value;
 };
+
+// Utility Function for Image Caching
+export const setImageCache = (key: string, data: CardInterface[]): void => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.error(`Failed to set localStorage key "${key}":`, error);
+  }
+};
+
+export const getImageCache = (key: string): CardInterface[] => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error(`Failed to parse localStorage key "${key}":`, error);
+    return [];
+  }
+};

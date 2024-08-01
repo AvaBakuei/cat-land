@@ -64,15 +64,17 @@ export const RandomCatModal: React.FC<RandomCatModalProps> = ({
           className={classes.modal}
         >
           <Center className={classes.modalBody}>
-            <Image
-              className={classes.modalImage}
-              src={catInfo?.imageUrl ?? base64}
-              alt="Cat Image"
-              fill
-              loading="lazy"
-              placeholder="blur"
-              blurDataURL={base64}
-            />
+            {base64 && (
+              <Image
+                className={classes.modalImage}
+                src={catInfo?.imageUrl ?? base64}
+                alt="Cat Image"
+                fill
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={base64}
+              />
+            )}
           </Center>
           {!isVerify ? (
             <>

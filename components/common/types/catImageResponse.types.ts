@@ -1,3 +1,5 @@
+import { CardInterface } from "./card.types"
+
 export interface CatImageResponse {
     id: string
     url: string
@@ -48,3 +50,7 @@ export interface Weight {
     metric: string
 }
 
+export interface CatsWithImagesProps {
+    catsWithImages: CardInterface[];
+    error?: string;
+}
