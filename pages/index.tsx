@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import { useQuery } from "@tanstack/react-query";
 import { CardList } from "@/components/Card/CardList";
 import { Loading } from "@/components/Loading";
-import { useFetcher } from "../components/common/hooks/useFetcher";
 import { withDataCheck } from "@/components/common/hocs/withDataCheck";
 import { CardInterface } from "@/components/common/types/card.types";
 import {
-  getWithExpiry,
+  getImageCache,
+  setImageCache,
   handlerFavorite,
+  getWithExpiry,
   setWithExpiry,
 } from "@/components/common/utils/localStorageUtils";
 import { pickProperties } from "@/components/common/utils/propertyUtils";
@@ -22,12 +22,16 @@ import { Pagination } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { RandomCatModal } from "@/components/Modal/RandomCatModal";
 import { getDailyItem } from "@/components/common/utils/getDailyItem";
+import { fetchData } from "./api/fetchData";
+import { GetServerSideProps } from "next";
+import { CatsWithImagesProps } from "@/components/common/types/catImageResponse.types";
+import { simulateLoading } from "@/components/common/utils/loadingUtils";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const EnhancedCardList = withDataCheck(CardList);
 
-const Home = () => {
+const Home: React.FC<CatsWithImagesProps> = ({ catsWithImages, error }) => {
   const [favorites, setFavorites] =
     useLocalStorage<CardInterface[]>(DEFAULT_VALUE);
   const [catList, setCatList] = useState<CardInterface[]>([]);
@@ -35,44 +39,33 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [breedCat, setBreedCat] = useState<CardInterface>();
   const [pinError, setPinError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
 
-  const { data: fetchCatList } = useFetcher();
-  const { data: fetchCatImage } = useFetcher();
-  const { isLoading, error, data } = useQuery<CardInterface[]>({
-    queryKey: ["catList"],
-    queryFn: async () => {
-      const catList: CardInterface[] = await fetchCatList(
-        "breeds?limit=21&page=0"
-      );
-      const newCatList = catList.map((cat) => pickProperties(cat, PICKED_KEYS));
-      const catsWithImages = await Promise.all(
-        newCatList.map((cat: CardInterface): Promise<CardInterface> => {
-          return fetchCatImage("images", cat.reference_image_id).then(
-            (image) => ({
-              ...cat,
-              imageUrl: image.url,
-            })
-          );
-        })
-      );
-      setCatList(catsWithImages);
-      return catsWithImages;
-    },
-  });
-
   useEffect(() => {
-    if (catList?.length) {
+    const cacheImages = getImageCache("catsData");
+    
+    if (cacheImages && cacheImages.length) {
+      setCatList(cacheImages);
+      setLoading(false);
+    } else {
+      setCatList(catsWithImages);
+      setImageCache("catsData", catsWithImages);
+      simulateLoading(setLoading);
+
+    }
+
+    if (catsWithImages?.length) {
       const modalShown = getWithExpiry("daily-cat-breed");
       if (!modalShown) {
         setIsModalOpen(true);
-        const dailyCat = getDailyItem(catList);
+        const dailyCat = getDailyItem(catsWithImages);
         setBreedCat(dailyCat);
         setWithExpiry("daily-cat-breed", dailyCat);
       }
     }
-  }, [catList]);
+  }, [catsWithImages]);
 
   const handleVerifyCode = (value: string) => {
     const catBreedStr = breedCat?.name.split(" ").join("").toLowerCase();
@@ -88,12 +81,17 @@ const Home = () => {
     handlerFavorite(cardData, favorites, setFavorites);
   };
 
-  if (isLoading) return <Loading />;
-  if (error) return "An error has occurred: " + error.message;
+  const handlePageChange = (page: number) => {
+    setLoading(true);
+    setCurrentPage(page);
+    simulateLoading(setLoading);
+  };
+
+  if (error) return <div>An error has occurred: {error}</div>;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = catList.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = Math.ceil(catList.length / itemsPerPage);
+  const currentItems = catList?.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(catList?.length / itemsPerPage);
 
   return (
     <>
@@ -104,28 +102,69 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <RandomCatModal
-          opened={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          catInfo={breedCat}
-          handleVerifyCode={handleVerifyCode}
-          isVerify={isVerify}
-          pinError={pinError}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <RandomCatModal
+              opened={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              catInfo={breedCat}
+              handleVerifyCode={handleVerifyCode}
+              isVerify={isVerify}
+              pinError={pinError}
+            />
 
-        <EnhancedCardList
-          cardData={currentItems}
-          handleFavorite={handleFavoritesList}
-        />
-        <Pagination
-          value={currentPage}
-          onChange={setCurrentPage}
-          total={totalPages}
-          color="orange.6" size="sm" withEdges
-        />
+            <EnhancedCardList
+              cardData={currentItems}
+              handleFavorite={handleFavoritesList}
+            />
+            {currentItems?.length > 0 && (
+              <Pagination
+                value={currentPage}
+                onChange={handlePageChange}
+                total={totalPages}
+                color="orange.6"
+                size="sm"
+                withEdges
+              />
+            )}
+          </>
+        )}
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const fetchCatList: CardInterface[] = await fetchData(
+      "breeds?limit=21&page=0"
+    );
+    const newCatList = fetchCatList.map((cat) =>
+      pickProperties(cat, PICKED_KEYS)
+    );
+    const catsWithImages: CardInterface[] = await Promise.all(
+      newCatList.map((cat: CardInterface): Promise<CardInterface> => {
+        return fetchData("images", cat.reference_image_id).then((image) => ({
+          ...cat,
+          imageUrl: image.url,
+        }));
+      })
+    );
+    return {
+      props: {
+        catsWithImages,
+      },
+    };
+  } catch (error: any) {
+    return {
+      props: {
+        catsWithImages: [],
+        error: error.message,
+      },
+    };
+  }
 };
 
 export default Home;
