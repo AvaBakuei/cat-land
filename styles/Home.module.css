@@ -105,6 +105,9 @@
 .logo {
   position: relative;
 }
+.app {
+  padding: 2rem 6rem;
+}
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
@@ -197,6 +200,9 @@
       rgb(var(--background-end-rgb)) 40%
     );
     z-index: 1;
+  }
+  .app {
+    padding: 2rem;
   }
 }
 
