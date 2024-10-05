@@ -28,7 +28,7 @@ const CatProfile: React.FC<CatProfileProps> = ({ catProfileData, error }) => {
   return (
     <Paper className={styles.catProfile} shadow="lg">
       <Grid>
-        <Grid.Col span={{ sm: 6, md: 12, lg: 4 }}>
+        <Grid.Col span={{ sm: 12, md: 12, lg: 4 }}>
           {catProfileData.imageUrl && base64 && (
             <Image
               src={catProfileData.imageUrl}
