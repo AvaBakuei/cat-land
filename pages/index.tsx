@@ -45,7 +45,7 @@ const Home: React.FC<CatsWithImagesProps> = ({ catsWithImages, error }) => {
 
   useEffect(() => {
     const cacheImages = getImageCache("catsData");
-    
+
     if (cacheImages && cacheImages.length) {
       setCatList(cacheImages);
       setLoading(false);

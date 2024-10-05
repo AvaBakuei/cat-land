@@ -21,3 +21,10 @@
     color: #FF8009;
     font-weight: 500;
 }
+
+/* Mobile */
+@media (max-width: 800px) {
+  .catProfile {
+   margin: 2rem;
+  }
+}
